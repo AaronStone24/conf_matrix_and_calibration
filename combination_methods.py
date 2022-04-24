@@ -453,7 +453,7 @@ class OracleCombiner:
             mode = kwargs.pop('mode', 'sCW')
             num_bins = kwargs.pop('num_bins', 15)
             self.calibrator = IMaxCalibrator(mode=mode, num_bins=num_bins)
-        elif self.calibration_method == 'none':
+        elif self.calibration_method == 'none' or self.calibration_method is None:
             self.calibrator = IdentityCalibrator()
 
     def calibrate(self, model_probs):
