@@ -46,6 +46,21 @@ def simulate_single_human(human_counts, seed=0):
 
     return human_labels[:, 0].astype(int)
 
+def simulate_single_human2(human_counts, seed=0):
+    rng = np.random.default_rng(seed)
+    
+    n_rows = human_counts.shape[0]
+
+    human_labels = np.empty(shape=(n_rows, 1))
+    for row in range(n_rows):
+        indices_maxVal = np.argwhere(human_counts[row,:] == np.max(human_counts[row,:])).flatten().tolist()
+        if len(indices_maxVal) > 1:
+            rng.shuffle(indices_maxVal)
+            human_labels[row, 0] = human_counts[row, indices_maxVal[0]]
+        else:
+            human_labels[row, 0] = human_counts[row, indices_maxVal[0]]
+
+    return human_labels[:,0].astype(int)
 
 class SoftLogLoss(nn.Module):
     # Implements the "soft-log-loss" for use with the EM algorithm
