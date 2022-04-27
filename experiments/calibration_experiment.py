@@ -71,7 +71,7 @@ def _run_experiment(y_h=None, model_probs=None, y_true=None, **kwargs):
         writer.writerows(cal_data)
 
 
-def run_experiment_cifar10(out_fpath=None, experiment_args=None, seed=0):
+def run_experiment_cifar10(out_fpath=None, experiment_args=None, seed=0, fx_choice=0):
     model_names = ['r_low_acc', 'resnet-110', 'preresnet-110', 'densenet-bc-L190-k40']
     for model_name in tqdm(model_names, desc='Models', leave=True):
         # Specify output files
@@ -84,7 +84,10 @@ def run_experiment_cifar10(out_fpath=None, experiment_args=None, seed=0):
 
         # Load data
         human_counts, model_probs, y_true = load_CIFAR10H(model_name)
-        y_h = simulate_single_human(human_counts, seed=seed)
+        if fx_choice == 0:
+            y_h = simulate_single_human(human_counts, seed=seed)
+        else:
+            y_h = simulate_single_human2(human_counts, seed=seed)
 
         _run_experiment(y_h=y_h, model_probs=model_probs, y_true=y_true, **experiment_args)
 
@@ -150,7 +153,7 @@ if __name__ == '__main__':
             }
 
     out_fpath = './output/cifar10h/final/fully_sup_CI/'
-    run_experiment_cifar10(out_fpath=out_fpath, experiment_args=args, seed=seed)
+    run_experiment_cifar10(out_fpath=out_fpath, experiment_args=args, seed=seed, fx_choice=0)
 
     out_fpath = './output/noisy_imagenet/final/fully_sup_CI/'
     run_experiment_noisy_imagenet(out_fpath=out_fpath, experiment_args=args, seed=seed)
